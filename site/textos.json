@@ -1,7 +1,7 @@
 {
   "pt": {
     "meta.titulo": "AutoCred - Risco e precificação de crédito",
-    "meta.descricao": "Modelo de PD e política de precificação para crédito veicular: validação fora do tempo, simulador da política e ROI realizado.",
+    "meta.descricao": "Modelagem de PD, política de taxas e simulador interativo da política de crédito.",
     "nav.marca": "AutoCred | Estudo de Caso de Crédito",
     "nav.idioma": "EN",
     "nav.idioma_rotulo": "Read in English",
@@ -150,7 +150,7 @@
   },
   "en": {
     "meta.titulo": "AutoCred - Credit risk and pricing",
-    "meta.descricao": "PD model and pricing policy for auto loans: out-of-time validation, a policy simulator and realized ROI.",
+    "meta.descricao": "PD modeling, rate policy and an interactive credit policy simulator.",
     "nav.marca": "AutoCred | Credit Case Study",
     "nav.idioma": "PT",
     "nav.idioma_rotulo": "Ler em português",
