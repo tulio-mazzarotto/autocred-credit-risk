@@ -1,0 +1,12 @@
+pandas==3.0.6
+numpy==2.5.3
+scikit-learn==1.9.1
+xgboost==3.4.1
+lightgbm==4.7.0
+matplotlib==3.11.2
+openpyxl==3.1.5
+joblib==1.6.0
+jupyter==1.1.1
+jupytext==1.19.5
+pytest==9.1.1
+lxml==6.1.3

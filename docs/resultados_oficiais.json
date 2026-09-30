@@ -1,0 +1,17 @@
+{
+  "fonte": "Apuração da mentoria JUMP (Analítica Educação), 26/09/2026",
+  "grupo": "Grupo 2",
+  "meta_roi": 0.15,
+  "modelo": "lgbm_monotonico",
+  "auc": 0.7711,
+  "gini": 0.5422,
+  "ks": 0.4630,
+  "roi": 0.1653,
+  "roi_projetado": 0.1640,
+  "volume_mi": 50.1,
+  "volume_projetado_mi": 52.6,
+  "aprovacao": 0.448,
+  "taxa_media": 0.02506,
+  "aceite": 0.639,
+  "inadimplencia": 0.0475
+}

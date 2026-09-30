@@ -1,0 +1,59 @@
+{
+  "consulta_em": "2026-09-23",
+  "sgs_25471_juros_veiculos_pf": {
+    "media_2022_2024": 1.9972,
+    "ultimo_mes": "2026-07",
+    "ultimo_valor": 1.98
+  },
+  "sgs_21121_inadimplencia_veiculos_pf": {
+    "media_2022_2024": 5.0433,
+    "ultimo_mes": "2026-07",
+    "ultimo_valor": 6.63
+  },
+  "instituicoes": {
+    "periodo": [
+      "2026-07-01",
+      "2026-09-09"
+    ],
+    "quantidade": 45,
+    "minima": 0.66,
+    "p25": 1.4975,
+    "mediana": 1.77,
+    "p75": 2.1399999999999997,
+    "p90": 3.0629999999999997,
+    "maxima": 3.37,
+    "grupos": {
+      "montadoras": {
+        "membros": [
+          "BCO MERCEDES-BENZ S.A.",
+          "BCO GM S.A.",
+          "BCO TOYOTA DO BRASIL S.A.",
+          "BCO VOLKSWAGEN S.A"
+        ],
+        "min": 0.66,
+        "max": 1.72
+      },
+      "grandes_bancos": {
+        "membros": [
+          "CAIXA ECONOMICA FEDERAL",
+          "BCO BRADESCO S.A.",
+          "BCO DO BRASIL S.A.",
+          "SANTANDER SCFI S.A.",
+          "ITAÚ UNIBANCO HOLDING S.A."
+        ],
+        "min": 1.03,
+        "max": 2.07
+      },
+      "topo": {
+        "membros": [
+          "BANCO PAN",
+          "BCO DAYCOVAL S.A",
+          "OMNI SA CFI",
+          "FINAMAX S.A. CFI"
+        ],
+        "min": 2.89,
+        "max": 3.37
+      }
+    }
+  }
+}

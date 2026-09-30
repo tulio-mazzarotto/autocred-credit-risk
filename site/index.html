@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AutoCred - Risco e precificação de crédito</title>
+<meta name="description" content="Modelo de PD e política de precificação para crédito veicular: validação fora do tempo, simulador da política e ROI realizado.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Otimizando risco e precificação de crédito automotivo - AutoCred">
+<meta property="og:description" content="Modelagem de PD, política de taxas e ROI realizado de 16,53%, acima da meta de 15%. Com simulador interativo da política.">
+<meta property="og:url" content="https://tulio-mazzarotto.github.io/autocred-credit-risk/">
+<meta property="og:image" content="https://tulio-mazzarotto.github.io/autocred-credit-risk/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<link rel="stylesheet" href="estilo.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+<header class="topo">
+  <div class="topo__dentro">
+    <a class="marca" href="#abertura" data-t="nav.marca"></a>
+    <nav class="topo__acoes">
+      <a class="topo__link" id="link-codigo" href="#" target="_blank" rel="noopener" data-t="nav.codigo"></a>
+      <button type="button" class="idioma" id="idioma"><span data-t="nav.idioma"></span></button>
+    </nav>
+  </div>
+</header>
+
+<p class="erro-carga" id="erro-carga" hidden>
+  Não foi possível carregar os dados da página. Abra-a por um servidor (python -m http.server).<br>
+  The page data could not be loaded. Open it through a web server (python -m http.server).
+</p>
+<noscript><p class="erro-carga">Esta página precisa de JavaScript. · This page needs JavaScript.</p></noscript>
+
+<main class="pagina">
+
+  <section id="abertura" class="secao abertura">
+    <h1 data-t-html="abertura.titulo"></h1>
+    <p class="lede" data-t-html="abertura.lede"></p>
+    <dl class="kpis">
+      <div class="kpi">
+        <dt data-t="abertura.kpi_auc"></dt>
+        <dd class="kpi__num" id="kpi-auc"></dd>
+        <dd class="kpi__sub" id="kpi-auc-sub"></dd>
+      </div>
+      <div class="kpi">
+        <dt data-t="abertura.kpi_roi"></dt>
+        <dd class="kpi__num" id="kpi-roi"></dd>
+        <dd class="kpi__sub" id="kpi-roi-sub"></dd>
+      </div>
+      <div class="kpi">
+        <dt data-t="abertura.kpi_erro"></dt>
+        <dd class="kpi__num" id="kpi-erro"></dd>
+        <dd class="kpi__sub" id="kpi-erro-sub"></dd>
+      </div>
+    </dl>
+  </section>
+
+  <section id="problema" class="secao">
+    <header class="secao__cabeca">
+      <p class="eyebrow" data-t="problema.eyebrow"></p>
+      <h2 data-t="problema.titulo"></h2>
+      <p class="texto" id="problema-texto"></p>
+    </header>
+    <ul class="limites">
+      <li data-t="problema.limite1"></li>
+      <li data-t="problema.limite2"></li>
+      <li data-t="problema.limite3"></li>
+      <li data-t="problema.limite4"></li>
+    </ul>
+    <div class="dupla">
+      <p class="texto" id="problema-bases"></p>
+      <div class="safras">
+        <h3 class="rotulo" data-t="problema.safras"></h3>
+        <div id="safras" class="safras__lista"></div>
+      </div>
+    </div>
+    <h3 class="subtitulo" data-t="problema.cadeia_titulo"></h3>
+    <ol class="cadeia">
+      <li><b data-t="problema.no_pd"></b><span data-t="problema.no_pd_sub"></span></li>
+      <li><b data-t="problema.no_ead"></b><span data-t="problema.no_ead_sub"></span></li>
+      <li><b data-t="problema.no_lgd"></b><span data-t="problema.no_lgd_sub"></span></li>
+      <li><b data-t="problema.no_perda"></b><span data-t="problema.no_perda_sub"></span></li>
+      <li><b data-t="problema.no_preco"></b><span data-t="problema.no_preco_sub"></span></li>
+      <li><b data-t="problema.no_roi"></b><span data-t="problema.no_roi_sub"></span></li>
+    </ol>
+    <p class="texto" data-t-html="problema.papel"></p>
+  </section>
+
+  <section id="armadilha" class="secao">
+    <header class="secao__cabeca">
+      <p class="eyebrow" data-t="armadilha.eyebrow"></p>
+      <h2 data-t="armadilha.titulo"></h2>
+      <p class="texto" data-t-html="armadilha.texto"></p>
+    </header>
+    <div class="contraste">
+      <figure class="contraste__item contraste__item--treino">
+        <span class="contraste__num" id="vaz-auc"></span>
+        <figcaption data-t="armadilha.treino"></figcaption>
+      </figure>
+      <span class="contraste__seta" aria-hidden="true">→</span>
+      <figure class="contraste__item">
+        <span class="contraste__num" id="vaz-teste"></span>
+        <figcaption id="vaz-teste-rotulo"></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="torneio" class="secao">
+    <header class="secao__cabeca">
+      <p class="eyebrow" data-t="torneio.eyebrow"></p>
+      <h2 data-t="torneio.titulo"></h2>
+      <p class="texto" data-t-html="torneio.texto"></p>
+    </header>
+    <figure class="grafico">
+      <figcaption class="grafico__cabeca">
+        <p class="grafico__titulo" data-t="torneio.grafico"></p>
+        <p class="grafico__sub" data-t="torneio.grafico_sub"></p>
+      </figcaption>
+      <div class="grafico__area" id="grafico-torneio"></div>
+    </figure>
+    <p class="texto" id="torneio-vencedor"></p>
+    <p class="texto" id="torneio-psi"></p>
+    <h3 class="subtitulo" data-t="torneio.u_titulo"></h3>
+    <p class="texto" data-t-html="torneio.u_texto"></p>
+    <figure class="grafico">
+      <figcaption class="grafico__cabeca">
+        <p class="grafico__titulo" data-t="torneio.u_grafico"></p>
+        <p class="grafico__sub" data-t="torneio.u_grafico_sub"></p>
+      </figcaption>
+      <div class="grafico__area" id="grafico-idade"></div>
+    </figure>
+  </section>
+
+  <section id="regua" class="secao">
+    <header class="secao__cabeca">
+      <p class="eyebrow" data-t="regua.eyebrow"></p>
+      <h2 data-t="regua.titulo"></h2>
+      <p class="texto" id="regua-texto"></p>
+    </header>
+    <figure class="grafico">
+      <figcaption class="grafico__cabeca">
+        <p class="grafico__titulo" data-t="regua.grafico"></p>
+        <p class="grafico__sub" data-t="regua.grafico_sub"></p>
+        <ul class="legenda">
+          <li><span class="amostra amostra--barra"></span><span data-t="regua.legenda_prevista"></span></li>
+          <li><span class="amostra amostra--ponto"></span><span data-t="regua.legenda_observada"></span></li>
+        </ul>
+      </figcaption>
+      <div class="grafico__area" id="grafico-regua"></div>
+    </figure>
+  </section>
+
+  <section id="simulador" class="secao simulador">
+    <header class="secao__cabeca">
+      <p class="eyebrow" data-t="simulador.eyebrow"></p>
+      <h2 data-t="simulador.titulo"></h2>
+      <p class="texto" data-t-html="simulador.texto"></p>
+    </header>
+
+    <div class="painel">
+      <form class="controles" id="controles">
+        <fieldset class="controle">
+          <legend data-t="simulador.corte"></legend>
+          <div class="segmentos" id="ctl-corte"></div>
+        </fieldset>
+        <div class="controle">
+          <label class="controle__rotulo" for="ctl-ajuste" data-t="simulador.taxa"></label>
+          <input type="range" id="ctl-ajuste" class="deslizante">
+          <div class="deslizante__escala" id="ajuste-escala" aria-hidden="true">
+            <span id="ajuste-min"></span><span class="deslizante__zero" id="ajuste-zero"></span><span id="ajuste-max"></span>
+          </div>
+          <output class="controle__valor" id="saida-ajuste" for="ctl-ajuste"></output>
+        </div>
+        <fieldset class="controle">
+          <legend data-t="simulador.entrada"></legend>
+          <div class="segmentos" id="ctl-entrada"></div>
+        </fieldset>
+        <fieldset class="controle">
+          <legend data-t="simulador.fora"></legend>
+          <div class="segmentos" id="ctl-fora"></div>
+        </fieldset>
+        <button type="button" class="botao" id="btn-vencedora" data-t="simulador.vencedora_btn"></button>
+      </form>
+
+      <div class="saida">
+        <div class="escada">
+          <p class="rotulo" data-t="simulador.escada"></p>
+          <ol class="escada__lista" id="escada"></ol>
+        </div>
+        <p class="status" id="sim-status" role="status" aria-live="polite"></p>
+        <p class="selo-vencedora" id="sim-vencedora" hidden></p>
+        <div class="cenarios" id="cenarios"></div>
+      </div>
+    </div>
+    <p class="aviso" data-t="simulador.aviso"></p>
+  </section>
+
+  <section id="mercado" class="secao">
+    <header class="secao__cabeca">
+      <p class="eyebrow" data-t="mercado.eyebrow"></p>
+      <h2 data-t="mercado.titulo"></h2>
+      <p class="texto" id="mercado-texto"></p>
+    </header>
+    <figure class="grafico">
+      <figcaption class="grafico__cabeca">
+        <p class="grafico__titulo" data-t="mercado.grafico"></p>
+        <p class="grafico__sub" id="mercado-grafico-sub"></p>
+        <ul class="legenda">
+          <li><span class="amostra amostra--instituicao"></span><span data-t="mercado.legenda_instituicao"></span></li>
+          <li><span class="amostra amostra--faixa"></span><span data-t="mercado.legenda_faixa"></span></li>
+          <li><span class="amostra amostra--antiga"></span><span data-t="mercado.legenda_antiga"></span></li>
+          <li><span class="amostra amostra--media"></span><span data-t="mercado.legenda_media"></span></li>
+        </ul>
+      </figcaption>
+      <div class="grafico__area" id="grafico-mercado"></div>
+    </figure>
+  </section>
+
+  <section id="resultado" class="secao">
+    <header class="secao__cabeca">
+      <p class="eyebrow" data-t="resultado.eyebrow"></p>
+      <h2 data-t="resultado.titulo"></h2>
+      <p class="texto" id="resultado-texto"></p>
+    </header>
+
+    <div class="placar">
+      <dl class="placar__destaques">
+        <div class="placar__item">
+          <dt data-t="resultado.roi_rotulo"></dt>
+          <dd class="placar__num" id="res-roi"></dd>
+          <dd class="placar__nota" id="res-roi-nota"></dd>
+        </div>
+        <div class="placar__item">
+          <dt data-t="resultado.inad_rotulo"></dt>
+          <dd class="placar__num" id="res-inad"></dd>
+          <dd class="placar__nota" id="res-inad-nota"></dd>
+        </div>
+        <div class="placar__item">
+          <dt data-t="resultado.taxa_rotulo"></dt>
+          <dd class="placar__num" id="res-taxa"></dd>
+          <dd class="placar__nota" id="res-taxa-nota"></dd>
+        </div>
+      </dl>
+      <div class="placar__limites">
+        <p class="rotulo" data-t="resultado.limites"></p>
+        <ul class="medidores" id="medidores"></ul>
+      </div>
+    </div>
+
+    <p class="texto destaque" id="resultado-projetado"></p>
+    <h3 class="subtitulo" data-t="resultado.licoes"></h3>
+    <ol class="licoes">
+      <li><h4 data-t="resultado.licao1_titulo"></h4><p id="licao1"></p></li>
+      <li><h4 data-t="resultado.licao2_titulo"></h4><p id="licao2"></p></li>
+      <li><h4 data-t="resultado.licao3_titulo"></h4><p id="licao3"></p></li>
+    </ol>
+    <p class="texto producao" data-t-html="resultado.producao"></p>
+  </section>
+
+</main>
+
+<footer class="rodape">
+  <div class="rodape__dentro">
+    <div class="rodape__equipe">
+      <ul class="equipe">
+        <li><b>Túlio Mazzarotto</b><span data-t="rodape.papel_modelo"></span></li>
+        <li><b>Leandro Nogueira</b><span data-t="rodape.papel_politica"></span></li>
+        <li><b>Fábio Piona de Sousa</b><span data-t="rodape.papel_defesa"></span></li>
+        <li><b>Joyce Marques Barbosa</b><span data-t="rodape.papel_apoio"></span></li>
+      </ul>
+    </div>
+    <div class="rodape__notas">
+      <p data-t="rodape.mentoria"></p>
+      <p id="rodape-fontes"></p>
+      <p data-t="rodape.ia"></p>
+      <p><a id="rodape-codigo" href="#" target="_blank" rel="noopener" data-t="rodape.codigo"></a></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
