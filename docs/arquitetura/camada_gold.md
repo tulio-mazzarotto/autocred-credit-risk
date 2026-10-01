@@ -24,7 +24,7 @@ auditoria e para tudo o que roda em lote.
 ## Arquitetura
 
 ```mermaid
-flowchart LR
+flowchart TB
   subgraph Fontes
     F1[Lojas e canal digital]
     F2[Bureau de crédito]
