@@ -71,17 +71,27 @@ e vender o carro. A taxa precisa cobrir essa perda e ainda deixar retorno.
    dados públicos do Banco Central sobre 45 instituições que financiam veículos
    ([`docs/benchmark/`](docs/benchmark/)).
 
+## Camada Gold (desenho de produção)
+
+Como o modelo e a política iriam para um Data Lake: arquitetura em camadas (Bronze, Silver e Gold),
+quatro tabelas Gold (propostas escoradas, regras de preço, decisões de crédito e monitoramento do
+score), consultas SQL para o motor de decisão em lote e para os painéis, e um protótipo que monta as
+tabelas com o modelo e a política reais. O protótipo reproduz a decisão da submissão oficial nas 5.000
+propostas e mostra, no monitoramento, o drift das propostas novas em relação à carteira (PSI de 0,376).
+O desafio não foi implantado num Data Lake: é o desenho, com um protótipo local que roda.
+Ver [`docs/arquitetura/camada_gold.md`](docs/arquitetura/camada_gold.md).
+
 ## Estrutura
 
 | Pasta | O que tem |
 |---|---|
-| `src/autocred/` | biblioteca do projeto: leitura das bases, perda esperada, features, avaliação, faixas de score, modelos, escoragem e simulador de política |
-| `tests/` | 92 testes automáticos (pytest) |
+| `src/autocred/` | biblioteca do projeto: leitura das bases, perda esperada, features, avaliação, faixas de score, modelos, escoragem, simulador de política e protótipo da camada Gold |
+| `tests/` | 98 testes automáticos (pytest) |
 | `notebooks/` | 01 diagnóstico, 02 torneio de modelos, 03 modelo final e 04 política, como fontes `.py` e notebooks executados `.ipynb` |
 | `bases/` | as três bases fictícias, o dicionário de dados e os parâmetros de EAD e LGD |
 | `site/` | a página interativa, em HTML, CSS e JavaScript, sem bibliotecas |
-| `scripts/` | execução dos notebooks, dados da página, consulta ao Banco Central e scripts da entrega |
-| `docs/` | especificações e planos de cada etapa, benchmarking e resultados oficiais |
+| `scripts/` | execução dos notebooks, dados da página, camada Gold, consulta ao Banco Central e scripts da entrega |
+| `docs/` | desenho da camada Gold, especificações e planos de cada etapa, benchmarking e resultados oficiais |
 
 ## Como rodar
 
@@ -111,6 +121,12 @@ python -m http.server 8000 --directory site
 ```
 
 A página fica em `http://localhost:8000`.
+
+Para montar a camada Gold com os resultados dos notebooks e rodar as consultas SQL de exemplo:
+
+```bash
+python scripts/gerar_camada_gold.py
+```
 
 `gerar_documento_politica.py` e `preparar_submissoes.py` produziram a entrega do desafio e dependem
 de materiais da mentoria que não estão neste repositório. Ficam como registro.

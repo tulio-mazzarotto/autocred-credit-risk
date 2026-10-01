@@ -71,17 +71,27 @@ selling the car. The rate has to cover that loss and still leave a return.
 5. **Market-anchored pricing.** Rates range from 2.3% to 2.9% per month by score, compared with public
    Central Bank of Brazil data on 45 lenders that finance cars ([`docs/benchmark/`](docs/benchmark/)).
 
+## Gold layer (production design)
+
+How the model and the policy would go into a Data Lake: a layered architecture (Bronze, Silver and
+Gold), four Gold tables (scored applications, pricing rules, credit decisions and score monitoring),
+SQL queries for a batch decision engine and dashboards, and a prototype that builds the tables from the
+real model and policy. The prototype reproduces the official submission's decision for all 5,000
+applications and its monitoring shows the drift of new applications against the portfolio (PSI of
+0.376). The challenge was not deployed to a Data Lake: this is the design, with a local prototype that
+runs. See [`docs/arquitetura/camada_gold.md`](docs/arquitetura/camada_gold.md) (in Portuguese).
+
 ## Repository layout
 
 | Folder | Contents |
 |---|---|
-| `src/autocred/` | project library: data loading, expected loss, features, evaluation, score bands, models, scoring and policy simulator |
-| `tests/` | 92 automated tests (pytest) |
+| `src/autocred/` | project library: data loading, expected loss, features, evaluation, score bands, models, scoring, policy simulator and Gold layer prototype |
+| `tests/` | 98 automated tests (pytest) |
 | `notebooks/` | 01 diagnosis, 02 model tournament, 03 final model and 04 policy, as `.py` sources and executed `.ipynb` notebooks |
 | `bases/` | the three fictional datasets, the data dictionary and the EAD and LGD parameters |
 | `site/` | the interactive page, in plain HTML, CSS and JavaScript |
-| `scripts/` | notebook runner, page data, Central Bank queries and the challenge delivery scripts |
-| `docs/` | specs and plans for each stage, benchmarking and official results |
+| `scripts/` | notebook runner, page data, Gold layer, Central Bank queries and the challenge delivery scripts |
+| `docs/` | Gold layer design, specs and plans for each stage, benchmarking and official results |
 
 The code, comments and notebooks are in Portuguese.
 
@@ -113,6 +123,12 @@ python -m http.server 8000 --directory site
 ```
 
 The page is at `http://localhost:8000`.
+
+To build the Gold layer from the notebook outputs and run the example SQL queries:
+
+```bash
+python scripts/gerar_camada_gold.py
+```
 
 `gerar_documento_politica.py` and `preparar_submissoes.py` produced the challenge delivery and depend
 on mentorship materials that are not in this repository. They are kept as a record.
